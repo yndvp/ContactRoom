@@ -19,9 +19,6 @@ public class Contact {
 //    @ColumnInfo(name = "occupation")
     private String occupation;
 
-    public Contact() {
-    }
-
     public Contact(@NonNull String name, @NonNull String occupation) {
         this.name = name;
         this.occupation = occupation;
