@@ -24,6 +24,8 @@ public class Contact {
         this.occupation = occupation;
     }
 
+    public Contact(){}
+
     public void setId(int id) {
         this.id = id;
     }

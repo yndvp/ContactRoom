@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnContactClickListener {
+    public static final String CONTACT_ID = "contact_id";
     private static final int NEW_CONTACT_ACTIVITY_REQUEST_CODE = 1;
     private ContactViewModel contactViewModel;
     private RecyclerView recyclerView;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         contactViewModel = new ViewModelProvider.AndroidViewModelFactory(
                 MainActivity.this.getApplication())
@@ -40,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         contactViewModel.getAllContacts().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(List<Contact> contacts) {
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 // Set up adapter
                 recyclerViewAdapter = new RecyclerViewAdapter(contacts, MainActivity.this, MainActivity.this);
                 recyclerView.setAdapter(recyclerViewAdapter);
@@ -84,9 +85,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
     @Override
     public void onContactClick(int position) {
-        Log.d(TAG, "onContactClick: " + position);
+//        Log.d(TAG, "onContactClick: " + position);
         Contact contact = contactViewModel.allContacts.getValue().get(position);
-        Log.d(TAG, "onContactClick: " + contact.getName());
+//        Log.d(TAG, "onContactClick: " + contact.getName());
 //        startActivity(new Intent(MainActivity.this, NewContact.class));
+
+        Intent intent = new Intent(MainActivity.this, NewContact.class);
+        intent.putExtra(CONTACT_ID, contact.getId());
+        startActivity(intent);
+        
     }
 }
