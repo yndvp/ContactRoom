@@ -84,10 +84,7 @@ public class NewContact extends AppCompatActivity {
 
         // Update button
         updateButton = findViewById(R.id.update_button);
-        deleteButton = findViewById(R.id.delete_button);
-
         updateButton.setOnClickListener(view -> {
-            int id = contactId;
             String name = enterName.getText().toString().trim();
             String occupation = enterOccupation.getText().toString().trim();
 
@@ -96,12 +93,22 @@ public class NewContact extends AppCompatActivity {
                         .show();
             } else {
                 Contact contact = new Contact();
-                contact.setId(id);
+                contact.setId(contactId);
                 contact.setName(name);
                 contact.setOccupation(occupation);
                 contactViewModel.update(contact);
                 finish();
             }
+        });
+
+        // Delete button
+        deleteButton = findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener(view -> {
+            int id = contactId;
+            Contact contact = new Contact();
+            contact.setId(id);
+            contactViewModel.delete(contact);
+            finish();
         });
 
         if(isEdit) {
