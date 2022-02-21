@@ -1,6 +1,7 @@
 package com.example.contactroom.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,12 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private List<Contact> contactList;
     private Context context;
+    private OnContactClickListener contactClickListener;
 
-    public RecyclerViewAdapter(List<Contact> contactList, Context context) {
+    public RecyclerViewAdapter(List<Contact> contactList, Context context, OnContactClickListener onContactClickListener) {
         this.contactList = contactList;
         this.context = context;
+        this.contactClickListener = onContactClickListener;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_row, parent, false);
 
-        return new ViewHolder(view);
+        return new ViewHolder(view, contactClickListener);
     }
 
     @Override
@@ -44,14 +47,27 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return contactList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        OnContactClickListener onContactClickListener;
         public TextView name;
         public TextView occupation;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnContactClickListener onContactClickListener) {
             super(itemView);
             name = itemView.findViewById(R.id.row_name_textview);
             occupation = itemView.findViewById(R.id.row_occupation_textview);
+            this.onContactClickListener = onContactClickListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onContactClickListener.onContactClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnContactClickListener {
+        void onContactClick(int position);
     }
 }

@@ -2,7 +2,6 @@ package com.example.contactroom;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,25 +9,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.example.contactroom.adapter.RecyclerViewAdapter;
 import com.example.contactroom.model.Contact;
 import com.example.contactroom.model.ContactViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.OnContactClickListener {
     private static final int NEW_CONTACT_ACTIVITY_REQUEST_CODE = 1;
     private ContactViewModel contactViewModel;
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private static final String TAG = "Clicked";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
                 // Set up adapter
-                recyclerViewAdapter = new RecyclerViewAdapter(contacts, MainActivity.this);
+                recyclerViewAdapter = new RecyclerViewAdapter(contacts, MainActivity.this, MainActivity.this);
                 recyclerView.setAdapter(recyclerViewAdapter);
 
 //                StringBuilder builder = new StringBuilder();
@@ -84,5 +80,13 @@ public class MainActivity extends AppCompatActivity {
 
             ContactViewModel.insert(contact);
         }
+    }
+
+    @Override
+    public void onContactClick(int position) {
+        Log.d(TAG, "onContactClick: " + position);
+        Contact contact = contactViewModel.allContacts.getValue().get(position);
+        Log.d(TAG, "onContactClick: " + contact.getName());
+//        startActivity(new Intent(MainActivity.this, NewContact.class));
     }
 }
